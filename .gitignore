@@ -37,3 +37,6 @@ build/
 
 ## logs ##
 app.log
+
+### Uploaded files ###
+uploads/
