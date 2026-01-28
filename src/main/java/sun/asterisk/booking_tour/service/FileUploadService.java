@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import sun.asterisk.booking_tour.dto.common.FileUploadResponse;
+import sun.asterisk.booking_tour.exception.FileUploadException;
 import sun.asterisk.booking_tour.exception.ValidationException;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,10 +26,10 @@ import java.util.UUID;
 public class FileUploadService {
 
     private static final Set<String> ALLOWED_IMAGE_TYPES = Set.of(
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "image/webp"
+            "image/jpeg",
+            "image/jpg",
+            "image/png",
+            "image/webp"
     );
 
     private static final long MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
@@ -33,7 +37,7 @@ public class FileUploadService {
     @Value("${file.upload.dir:uploads}")
     private String uploadDir;
 
-    @Value("${file.upload.base-url:http://localhost:8080/uploads}")
+    @Value("${file.upload.base-url}")
     private String baseUrl;
 
     public FileUploadResponse uploadAvatar(MultipartFile file) {
@@ -66,8 +70,24 @@ public class FileUploadService {
 
         String contentType = file.getContentType();
         if (contentType == null || !ALLOWED_IMAGE_TYPES.contains(contentType.toLowerCase())) {
-            throw new ValidationException("Only JPG, PNG, and WEBP images are allowed");
+            throw new ValidationException("Unsupported image type");
         }
+
+        BufferedImage image;
+        try {
+            image = ImageIO.read(file.getInputStream());
+            if (image == null) {
+                throw new ValidationException("File content is not a valid image");
+            }
+        } catch (IOException e) {
+            log.error("Failed to read image content", e);
+            throw new ValidationException("Failed to validate image content");
+        }
+
+        if (image.getWidth() <= 0 || image.getHeight() <= 0) {
+            throw new ValidationException("Invalid image dimensions");
+        }
+
     }
 
     private String generateFileName(String originalFilename) {
@@ -90,16 +110,16 @@ public class FileUploadService {
 
     private Path createUploadDirectory() {
         Path uploadPath = Paths.get(uploadDir, "avatars");
-        
+
         if (!Files.exists(uploadPath)) {
             try {
                 Files.createDirectories(uploadPath);
             } catch (IOException e) {
                 log.error("Failed to create upload directory: {}", uploadPath, e);
-                throw new ValidationException("Failed to create upload directory");
+                throw new FileUploadException("Failed to create upload directory", e);
             }
         }
-        
+
         return uploadPath;
     }
 
@@ -109,7 +129,7 @@ public class FileUploadService {
             log.info("File uploaded successfully: {}", filePath);
         } catch (IOException e) {
             log.error("Failed to save file: {}", filePath, e);
-            throw new ValidationException("Failed to save file");
+            throw new FileUploadException("Failed to save file");
         }
     }
 }

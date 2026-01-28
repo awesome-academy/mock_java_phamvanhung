@@ -131,15 +131,11 @@ public class TourService {
     }
 
     private LocalDate getNextDepartureDate(Long tourId) {
-        List<TourDeparture> departures = tourDepartureRepository.findByTourId(tourId);
-        
-        return departures.stream()
-                .filter(d -> d.getDepartureDate().isAfter(LocalDate.now().minusDays(1)))
-                .filter(d -> d.getStatus() == TourDepartureStatus.OPEN)
-                .filter(d -> d.getAvailableSlots() > 0)
-                .map(TourDeparture::getDepartureDate)
-                .min(LocalDate::compareTo)
-                .orElse(null);
+        return tourDepartureRepository.findNextAvailableDepartureDate(
+                tourId, 
+                LocalDate.now(), 
+                TourDepartureStatus.OPEN
+        );
     }
 
     private BigDecimal calculateFinalPrice(BigDecimal priceAdult, BigDecimal discountRate) {

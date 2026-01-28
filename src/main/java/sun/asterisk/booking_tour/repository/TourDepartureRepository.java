@@ -27,4 +27,18 @@ public interface TourDepartureRepository extends JpaRepository<TourDeparture, Lo
         @Param("status") TourDepartureStatus status,
         @Param("currentDate") LocalDate currentDate
     );
+
+    @Query("SELECT td.departureDate " +
+           "FROM TourDeparture td " +
+           "WHERE td.tour.id = :tourId " +
+           "AND td.departureDate >= :currentDate " +
+           "AND td.status = :status " +
+           "AND td.availableSlots > 0 " +
+           "ORDER BY td.departureDate ASC " +
+           "LIMIT 1")
+    LocalDate findNextAvailableDepartureDate(
+        @Param("tourId") Long tourId,
+        @Param("currentDate") LocalDate currentDate,
+        @Param("status") TourDepartureStatus status
+    );
 }
