@@ -50,6 +50,12 @@ oauth:
     client-secret: ${TWITTER_CLIENT_SECRET}
     redirect-uri: ${TWITTER_REDIRECT_URI}
 
+# File Upload Configuration
+file:
+  upload:
+    dir: ${FILE_UPLOAD_DIR:uploads}
+    base-url: ${FILE_UPLOAD_BASE_URL:http://localhost:8080/uploads}
+
 # Swagger/OpenAPI Configuration
 springdoc:
   api-docs:
