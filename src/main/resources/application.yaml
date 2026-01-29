@@ -64,3 +64,9 @@ springdoc:
     path: /swagger-ui.html
     enabled: true
 
+stripe:
+  secret-key: ${STRIPE_SECRET_KEY:}
+  success-url: ${STRIPE_SUCCESS_URL:http://localhost:8080/api/v1/payments/stripe/success?session_id={CHECKOUT_SESSION_ID}}
+  cancel-url: ${STRIPE_CANCEL_URL:http://localhost:8080/api/v1/payments/stripe/cancel?session_id={CHECKOUT_SESSION_ID}}
+  currency: ${STRIPE_CURRENCY:usd}
+

@@ -207,10 +207,6 @@ public class AuthService {
      */
     private String exchangeFacebookCodeForToken(String code) {
         WebClient webClient = webClientBuilder.build();
-        System.out.println("Exchanging Facebook code for token with code: " + code);
-        System.out.println("Facebook Client ID: " + facebookClientId);
-        System.out.println("Facebook Client Secret: " + facebookClientSecret);
-        System.out.println("Facebook Redirect URI: " + facebookRedirectUri);
 
         FacebookTokenResponse response = webClient.get()
                 .uri(uriBuilder -> uriBuilder
