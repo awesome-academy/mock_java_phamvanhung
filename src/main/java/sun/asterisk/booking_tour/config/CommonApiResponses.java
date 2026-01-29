@@ -82,4 +82,26 @@ public class CommonApiResponses {
         )
     })
     public @interface InvalidFile {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @ApiResponses(value = {
+        @ApiResponse(
+                responseCode = "404",
+                description = "Resource not found",
+                content = @Content(mediaType = "application/json")
+        )
+    })
+    public @interface NotFound {}
+
+    @Target({ElementType.METHOD, ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @ApiResponses(value = {
+        @ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = @Content(mediaType = "application/json")
+        )
+    })
+    public @interface InternalServerError {}
 }

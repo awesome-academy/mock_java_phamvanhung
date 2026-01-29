@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import sun.asterisk.booking_tour.config.CommonApiResponses;
 import sun.asterisk.booking_tour.dto.common.PageResponse;
 import sun.asterisk.booking_tour.dto.tour.TourDetailResponse;
 import sun.asterisk.booking_tour.dto.tour.TourSearchRequest;
@@ -34,6 +35,7 @@ public class TourController {
             summary = "Search tours",
             description = "Search and filter tours with various criteria. All parameters are optional. This endpoint does not require authentication."
     )
+    @CommonApiResponses.BadRequest
     @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
@@ -42,14 +44,9 @@ public class TourController {
                         mediaType = "application/json",
                         schema = @Schema(implementation = PageResponse.class)
                 )
-        ),
-        @ApiResponse(
-                responseCode = "400",
-                description = "Invalid request parameters",
-                content = @Content(mediaType = "application/json")
         )
     })
-    @GetMapping("/search")
+    @GetMapping("")
     public ResponseEntity<PageResponse<TourSearchResponse>> searchTours(
             @Valid @ModelAttribute TourSearchRequest request
     ) {
@@ -61,6 +58,7 @@ public class TourController {
             summary = "Get tour by slug",
             description = "Retrieve detailed information about a specific tour by its slug. This endpoint does not require authentication."
     )
+    @CommonApiResponses.NotFound
     @ApiResponses(value = {
         @ApiResponse(
                 responseCode = "200",
@@ -69,14 +67,9 @@ public class TourController {
                         mediaType = "application/json",
                         schema = @Schema(implementation = TourDetailResponse.class)
                 )
-        ),
-        @ApiResponse(
-                responseCode = "404",
-                description = "Tour not found",
-                content = @Content(mediaType = "application/json")
         )
     })
-    @GetMapping("/tours/{slug}")
+    @GetMapping("/{slug}")
     public ResponseEntity<TourDetailResponse> getTourBySlug(
             @Parameter(description = "Tour slug", example = "tour-phu-quoc-3n2d", required = true)
             @PathVariable String slug
