@@ -3,6 +3,7 @@ package sun.asterisk.booking_tour.config;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Locale;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -32,7 +33,12 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (roleName != null) {
-            return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + roleName));
+            String normalizedRole = roleName.trim();
+            if (normalizedRole.startsWith("ROLE_")) {
+                normalizedRole = normalizedRole.substring("ROLE_".length());
+            }
+            normalizedRole = normalizedRole.toUpperCase(Locale.ROOT);
+            return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + normalizedRole));
         }
         return Collections.emptyList();
     }
