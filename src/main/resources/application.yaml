@@ -4,6 +4,20 @@ spring:
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
+  mail:
+    host: ${MAIL_HOST:}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    from: ${MAIL_FROM:${MAIL_USERNAME:}}
+    properties:
+      mail:
+        debug: ${MAIL_DEBUG:false}
+        smtp:
+          auth: ${MAIL_SMTP_AUTH:true}
+          starttls:
+            enable: ${MAIL_SMTP_STARTTLS_ENABLE:true}
+
   datasource:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
@@ -25,6 +39,15 @@ spring:
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:}
       timeout: 3000ms
+
+mail:
+  queue:
+    redis:
+      key: ${MAIL_QUEUE_REDIS_KEY:mail:queue}
+    pop-timeout-ms: ${MAIL_QUEUE_POP_TIMEOUT_MS:1000}
+    worker-interval-ms: ${MAIL_QUEUE_WORKER_INTERVAL_MS:200}
+    max-attempts: ${MAIL_QUEUE_MAX_ATTEMPTS:5}
+    base-backoff-ms: ${MAIL_QUEUE_BASE_BACKOFF_MS:5000}
 
 server:
   port: ${SERVER_PORT:8080}

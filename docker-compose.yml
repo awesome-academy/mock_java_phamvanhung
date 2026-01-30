@@ -47,6 +47,15 @@ services:
     command: redis-server --appendonly yes
     volumes:
       - redis_data:/data
+
+  mailhog:
+    image: mailhog/mailhog:v1.0.1
+    container_name: booking-tour-mailhog
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - booking-tour-network
     
 volumes:
   postgres_data:

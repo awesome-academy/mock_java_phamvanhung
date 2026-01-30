@@ -7,10 +7,11 @@ import com.stripe.Stripe;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.extern.java.Log;
 import sun.asterisk.booking_tour.config.StripeProperties;
 import sun.asterisk.booking_tour.dto.payment.StripeCheckoutResponse;
 import sun.asterisk.booking_tour.dto.payment.StripePaymentStatusResponse;
@@ -27,18 +28,24 @@ import sun.asterisk.booking_tour.repository.PaymentRepository;
 @Service
 public class PaymentService {
 
+    private static final Logger logger = LoggerFactory.getLogger(PaymentService.class);
+
     private final BookingRepository bookingRepository;
     private final PaymentRepository paymentRepository;
 
     private final StripeProperties stripeProperties;
 
+    private final EmailQueueService emailQueueService;
+
     public PaymentService(
             BookingRepository bookingRepository,
             PaymentRepository paymentRepository,
-            StripeProperties stripeProperties) {
+            StripeProperties stripeProperties,
+            EmailQueueService emailQueueService) {
         this.bookingRepository = bookingRepository;
         this.paymentRepository = paymentRepository;
         this.stripeProperties = stripeProperties;
+        this.emailQueueService = emailQueueService;
     }
 
     @Transactional
@@ -135,6 +142,15 @@ public class PaymentService {
             if (booking != null) {
                 booking.setStatus(BookingStatus.PAID);
                 bookingRepository.save(booking);
+
+                String bookingCode = booking.getCode();
+                String toEmail = booking.getContactEmail();
+                try {
+                    emailQueueService.enqueueBookingPaymentSuccess(booking);
+                    logger.warn("Enqueued payment success email job. bookingCode={}, to={}", bookingCode, toEmail);
+                } catch (Exception e) {
+                    logger.error("Failed to enqueue payment success email job. bookingCode={}, to={}", bookingCode, toEmail, e);
+                }
             }
 
             return new StripePaymentStatusResponse(true, "Payment success",
