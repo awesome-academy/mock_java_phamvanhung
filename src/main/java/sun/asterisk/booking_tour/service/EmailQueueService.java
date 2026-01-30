@@ -42,7 +42,7 @@ public class EmailQueueService {
         try {
             String payload = objectMapper.writeValueAsString(message);
             redisTemplate.opsForList().leftPush(queueKey, payload);
-            logger.warn("Enqueued email message to Redis. queueKey={}, type={}, bookingCode={}",
+                logger.info("Enqueued email message to Redis. queueKey={}, type={}, bookingCode={}",
                     queueKey, message.getType(), bookingCode);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Failed to serialize RedisEmailMessage", e);

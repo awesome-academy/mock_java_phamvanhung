@@ -1,6 +1,8 @@
 package sun.asterisk.booking_tour.service;
 
 import java.time.Duration;
+import java.time.Instant;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,6 +38,13 @@ public class RedisEmailWorker {
     @Value("${mail.queue.base-backoff-ms:5000}")
     private long baseBackoffMs;
 
+    private final String delayedQueueKey;
+
+    {
+        // Use a postfix for delayed queue key
+        delayedQueueKey = queueKey + ":delayed";
+    }
+
     public RedisEmailWorker(
             RedisTemplate<String, String> redisTemplate,
             ObjectMapper objectMapper,
@@ -50,6 +59,9 @@ public class RedisEmailWorker {
     @Scheduled(fixedDelayString = "${mail.queue.worker-interval-ms:200}")
     public void poll() {
         try {
+            // First, move due delayed messages to the main queue
+            moveDueDelayedMessages();
+
             String payload = redisTemplate.opsForList().rightPop(queueKey, Duration.ofMillis(popTimeoutMs));
             if (payload == null || payload.isBlank()) {
                 return;
@@ -62,6 +74,21 @@ public class RedisEmailWorker {
 
         } catch (Exception e) {
             logger.error("RedisEmailWorker poll failed", e);
+        }
+    }
+
+    private void moveDueDelayedMessages() {
+        long now = Instant.now().toEpochMilli();
+        // Get all messages with score <= now
+        Set<String> dueMessages = redisTemplate.opsForZSet().rangeByScore(delayedQueueKey, 0, now);
+        if (dueMessages != null && !dueMessages.isEmpty()) {
+            for (String msg : dueMessages) {
+                // Remove from delayed queue and push to main queue
+                Long removed = redisTemplate.opsForZSet().remove(delayedQueueKey, msg);
+                if (removed != null && removed > 0) {
+                    redisTemplate.opsForList().leftPush(queueKey, msg);
+                }
+            }
         }
     }
 
@@ -103,19 +130,13 @@ public class RedisEmailWorker {
             logger.error("Redis email message failed, will retry. type={}, bookingCode={}, attempt={}, delayMs={}",
                     type, bookingCode, nextAttempt, delayMs, e);
 
-            try {
-                Thread.sleep(delayMs);
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-                return;
-            }
-
             message.setAttempt(nextAttempt);
             try {
                 String payload = objectMapper.writeValueAsString(message);
-                redisTemplate.opsForList().leftPush(queueKey, payload);
+                long nextTime = Instant.now().toEpochMilli() + delayMs;
+                redisTemplate.opsForZSet().add(delayedQueueKey, payload, nextTime);
             } catch (Exception ex) {
-                logger.error("Failed to requeue redis email message. type={}, bookingCode={}, attempt={}",
+                logger.error("Failed to requeue redis email message (delayed). type={}, bookingCode={}, attempt={}",
                         type, bookingCode, nextAttempt, ex);
             }
         }

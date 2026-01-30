@@ -12,6 +12,7 @@ import sun.asterisk.booking_tour.dto.payment.StripeCheckoutResponse;
 import sun.asterisk.booking_tour.dto.payment.StripePaymentStatusResponse;
 import sun.asterisk.booking_tour.dto.payment.StripeCheckoutRequest;
 import sun.asterisk.booking_tour.service.PaymentService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/payments")
@@ -24,7 +25,7 @@ public class PaymentController {
     }
 
     @PostMapping("/stripe/checkout")
-    public ResponseEntity<StripeCheckoutResponse> createStripeCheckout(@RequestBody StripeCheckoutRequest request) {
+    public ResponseEntity<StripeCheckoutResponse> createStripeCheckout(@Valid @RequestBody StripeCheckoutRequest request) {
         StripeCheckoutResponse response = paymentService.createStripeCheckout(request.getBookingCode());
         return ResponseEntity.ok(response);
     }
