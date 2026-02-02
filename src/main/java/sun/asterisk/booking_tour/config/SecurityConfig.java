@@ -28,6 +28,10 @@ public class SecurityConfig {
     private static final String[] PUBLIC_URLS = {
         "/api/v1/auth/**",
         "/api/v1/tours/**",
+        "/api/v1/reviews/tour/**",
+        "/api/v1/reviews/{reviewId}",
+        "/api/v1/comments/review/**",
+        "/api/v1/comments/tour/**",
         "/uploads/**",
         "/swagger-ui/**",
         "/swagger-ui.html",
@@ -45,6 +49,13 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(401);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Authentication required\"}");
+                })
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_URLS).permitAll()
                 .requestMatchers(

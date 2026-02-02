@@ -1,5 +1,10 @@
 package sun.asterisk.booking_tour.repository;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +33,29 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
         @Param("tourId") Long tourId,
         @Param("status") ReviewStatus status
     );
+    
+    @Query("SELECT r FROM Review r " +
+           "LEFT JOIN FETCH r.user " +
+           "LEFT JOIN FETCH r.tour " +
+           "LEFT JOIN FETCH r.booking " +
+           "WHERE r.tour.id = :tourId AND r.status = :status " +
+           "ORDER BY r.createdAt DESC")
+    Page<Review> findByTourIdAndStatus(@Param("tourId") Long tourId, 
+                                        @Param("status") ReviewStatus status,
+                                        Pageable pageable);
+    
+    @Query("SELECT r FROM Review r " +
+           "LEFT JOIN FETCH r.user " +
+           "LEFT JOIN FETCH r.tour " +
+           "LEFT JOIN FETCH r.booking " +
+           "WHERE r.user.id = :userId " +
+           "ORDER BY r.createdAt DESC")
+    Page<Review> findByUserId(@Param("userId") Long userId, Pageable pageable);
+    
+    @Query("SELECT r FROM Review r " +
+           "LEFT JOIN FETCH r.user " +
+           "LEFT JOIN FETCH r.tour " +
+           "LEFT JOIN FETCH r.booking " +
+           "WHERE r.id = :reviewId AND r.user.id = :userId")
+    Optional<Review> findByIdAndUserId(@Param("reviewId") Long reviewId, @Param("userId") Long userId);
 }
