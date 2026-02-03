@@ -1,0 +1,62 @@
+package sun.asterisk.booking_tour.controller.admin;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+@RequestMapping("/admin")
+public class AdminController {
+
+    @GetMapping("/login")
+    public String login(
+            @RequestParam(value = "error", required = false) String error,
+            @RequestParam(value = "logout", required = false) String logout,
+            Model model
+    ) {
+        if (error != null) {
+            model.addAttribute("error", "Invalid email or password");
+        }
+        if (logout != null) {
+            model.addAttribute("logout", true);
+        }
+        return "admin/login";
+    }
+
+    @GetMapping
+    public String dashboard(Model model) {
+        return "admin/dashboard";
+    }
+
+    @GetMapping("/users")
+    public String manageUsers(Model model) {
+        return "admin/users";
+    }
+
+    @GetMapping("/tours")
+    public String manageTours(Model model) {
+        return "admin/tours";
+    }
+
+    @GetMapping("/bookings")
+    public String manageBookings(Model model) {
+        return "admin/bookings";
+    }
+
+    @GetMapping("/reviews")
+    public String manageReviews(Model model) {
+        return "admin/reviews";
+    }
+
+    @GetMapping("/revenue")
+    public String manageRevenue(Model model) {
+        return "admin/revenue";
+    }
+
+    @GetMapping("/categories")
+    public String manageCategories(Model model) {
+        return "admin/categories";
+    }
+}

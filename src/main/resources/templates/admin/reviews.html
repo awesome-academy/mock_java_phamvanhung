@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <div th:replace="~{admin/fragments/sidebar :: sidebar(activePage='reviews')}"></div>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white shadow-sm">
+                <div class="flex items-center justify-between p-4">
+                    <h1 class="text-2xl font-semibold text-gray-800">Quản lý Review</h1>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="flex-1 overflow-y-auto p-6">
+                <!-- Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <p class="text-gray-500 text-sm">Tổng Review</p>
+                        <p class="text-2xl font-bold text-gray-800">456</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <p class="text-gray-500 text-sm">Đánh giá trung bình</p>
+                        <div class="flex items-center">
+                            <p class="text-2xl font-bold text-yellow-500 mr-2">4.5</p>
+                            <div class="flex text-yellow-500">
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star text-sm"></i>
+                                <i class="fas fa-star-half-alt text-sm"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-4">
+                        <p class="text-gray-500 text-sm">Chờ duyệt</p>
+                        <p class="text-2xl font-bold text-orange-600">12</p>
+                    </div>
+                </div>
+
+                <!-- Search and Filter -->
+                <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <input type="text" placeholder="Tìm kiếm review..." 
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option>Tất cả đánh giá</option>
+                            <option>5 sao</option>
+                            <option>4 sao</option>
+                            <option>3 sao</option>
+                            <option>2 sao</option>
+                            <option>1 sao</option>
+                        </select>
+                        <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Reviews List -->
+                <div class="space-y-4">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-user text-gray-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Nguyễn Văn A</p>
+                                    <p class="text-sm text-gray-500">Tour Hà Nội - Sapa</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center text-yellow-500">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ml-2 text-gray-600 text-sm">5.0</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mb-3">
+                            Chuyến đi rất tuyệt vời! Hướng dẫn viên nhiệt tình, khách sạn sạch đẹp. 
+                            Gia đình tôi rất hài lòng và sẽ quay lại với các tour khác.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">01/02/2026</span>
+                            <div class="space-x-2">
+                                <button class="px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200">
+                                    <i class="fas fa-check mr-1"></i> Duyệt
+                                </button>
+                                <button class="px-3 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200">
+                                    <i class="fas fa-times mr-1"></i> Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex items-start justify-between mb-3">
+                            <div class="flex items-center">
+                                <div class="w-12 h-12 bg-gray-300 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-user text-gray-600"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-gray-800">Trần Thị B</p>
+                                    <p class="text-sm text-gray-500">Tour Phú Quốc</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center text-yellow-500">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ml-2 text-gray-600 text-sm">4.0</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-700 mb-3">
+                            Tour tốt, dịch vụ ổn. Tuy nhiên thời gian hơi gấp gáp. 
+                            Nếu có thêm thời gian nghỉ ngơi thì sẽ tuyệt vời hơn.
+                        </p>
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-gray-500">01/02/2026</span>
+                            <div class="space-x-2">
+                                <button class="px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200">
+                                    <i class="fas fa-check mr-1"></i> Duyệt
+                                </button>
+                                <button class="px-3 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200">
+                                    <i class="fas fa-times mr-1"></i> Xóa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-6 flex justify-center">
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            Trước
+                        </button>
+                        <button class="px-3 py-2 border border-blue-600 bg-blue-600 text-white rounded-md text-sm font-medium">1</button>
+                        <button class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">2</button>
+                        <button class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            Sau
+                        </button>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
