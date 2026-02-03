@@ -15,15 +15,19 @@ import lombok.Setter;
 @Schema(description = "Review page request for pagination")
 public class ReviewPageRequest {
 
+    @Builder.Default
     @Schema(description = "Page number (0-indexed)", example = "0", defaultValue = "0")
     private Integer page = 0;
 
+    @Builder.Default
     @Schema(description = "Page size", example = "10", defaultValue = "10")
     private Integer size = 10;
 
+    @Builder.Default
     @Schema(description = "Sort field", example = "createdAt", defaultValue = "createdAt")
     private String sortBy = "createdAt";
 
+    @Builder.Default
     @Schema(description = "Sort direction (ASC or DESC)", example = "DESC", defaultValue = "DESC")
     private String sortDirection = "DESC";
 }

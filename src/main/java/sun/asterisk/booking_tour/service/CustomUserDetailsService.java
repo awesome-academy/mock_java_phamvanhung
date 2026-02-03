@@ -7,12 +7,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import sun.asterisk.booking_tour.config.CustomUserDetails;
 import sun.asterisk.booking_tour.entity.User;
 import sun.asterisk.booking_tour.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -29,7 +31,8 @@ public class CustomUserDetailsService implements UserDetailsService {
             roleName = user.getRole().getName();
         }
         
-        return CustomUserDetails.builder()
+        
+        CustomUserDetails userDetails = CustomUserDetails.builder()
                 .userId(user.getId())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
@@ -42,5 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .status(user.getStatus())
                 .roleName(roleName)
                 .build();
+        
+        return userDetails;
     }
 }

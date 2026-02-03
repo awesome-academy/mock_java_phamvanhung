@@ -57,12 +57,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers("/api/**", "/admin/logout")
+                .ignoringRequestMatchers("/api/**", "/admin/**")
             )
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false)
             )
+            .authenticationProvider(authenticationProvider())
             .formLogin(form -> form
                 .loginPage("/admin/login")
                 .loginProcessingUrl("/admin/login")
@@ -92,12 +95,12 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(PUBLIC_URLS).permitAll()
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").hasAnyRole("ADMIN", "admin")
                 .requestMatchers(
                     "/api/v1/bookings/**",
                     "/api/v1/payments/**",
                     "/api/v1/users/me",
-                    "/api/v1/users/me/**").hasRole("USER")
+                    "/api/v1/users/me/**").hasAnyRole("USER", "user")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

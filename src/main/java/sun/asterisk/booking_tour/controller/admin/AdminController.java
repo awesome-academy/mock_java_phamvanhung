@@ -30,11 +30,6 @@ public class AdminController {
         return "admin/dashboard";
     }
 
-    @GetMapping("/users")
-    public String manageUsers(Model model) {
-        return "admin/users";
-    }
-
     @GetMapping("/tours")
     public String manageTours(Model model) {
         return "admin/tours";
@@ -60,3 +55,4 @@ public class AdminController {
         return "admin/categories";
     }
 }
+
