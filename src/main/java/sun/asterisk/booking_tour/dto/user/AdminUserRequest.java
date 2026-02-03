@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminUserRequest {
+
     @NotBlank(message = "First name is required")
     private String firstName;
 
@@ -22,7 +23,9 @@ public class AdminUserRequest {
     @Email(message = "Email must be valid")
     private String email;
 
+    @NotBlank(message = "Password is required")
     private String password;
-    
-    private Long roleId;
+
+    @NotBlank(message = "Role ID is required")
+    private String roleId;
 }
