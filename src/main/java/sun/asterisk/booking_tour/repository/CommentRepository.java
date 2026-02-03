@@ -29,6 +29,17 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     
     Long countByTourId(Long tourId);
     
+    @Query("SELECT c.review.id as reviewId, COUNT(c) as commentCount " +
+           "FROM Comment c " +
+           "WHERE c.review.id IN :reviewIds " +
+           "GROUP BY c.review.id")
+    List<ReviewCommentCount> countCommentsByReviewIds(@Param("reviewIds") List<Long> reviewIds);
+    
+    interface ReviewCommentCount {
+        Long getReviewId();
+        Long getCommentCount();
+    }
+    
     @Query("SELECT c FROM Comment c " +
            "WHERE c.id = :commentId AND c.user.id = :userId")
     Optional<Comment> findByIdAndUserId(@Param("commentId") Long commentId, @Param("userId") Long userId);
