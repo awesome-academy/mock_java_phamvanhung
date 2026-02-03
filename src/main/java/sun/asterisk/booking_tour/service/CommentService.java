@@ -19,6 +19,7 @@ import sun.asterisk.booking_tour.entity.Comment;
 import sun.asterisk.booking_tour.entity.Review;
 import sun.asterisk.booking_tour.entity.Tour;
 import sun.asterisk.booking_tour.entity.User;
+import sun.asterisk.booking_tour.exception.ForbiddenException;
 import sun.asterisk.booking_tour.exception.ResourceNotFoundException;
 import sun.asterisk.booking_tour.exception.UnauthorizedException;
 import sun.asterisk.booking_tour.exception.ValidationException;
@@ -84,8 +85,12 @@ public class CommentService {
     public void deleteComment(Long commentId) {
         Long userId = getCurrentUserId();
         
-        Comment comment = commentRepository.findByIdAndUserId(commentId, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Comment not found or you don't have permission"));
+        Comment comment = commentRepository.findById(commentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+        
+        if (!comment.getUser().getId().equals(userId)) {
+            throw new ForbiddenException("You don't have permission to delete this comment");
+        }
         
         commentRepository.delete(comment);
         log.info("Deleted comment with id: {} by user: {}", commentId, userId);

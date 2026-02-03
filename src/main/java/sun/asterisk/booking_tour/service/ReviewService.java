@@ -23,6 +23,7 @@ import sun.asterisk.booking_tour.entity.Review;
 import sun.asterisk.booking_tour.entity.Tour;
 import sun.asterisk.booking_tour.entity.User;
 import sun.asterisk.booking_tour.enums.ReviewStatus;
+import sun.asterisk.booking_tour.exception.ForbiddenException;
 import sun.asterisk.booking_tour.exception.ResourceNotFoundException;
 import sun.asterisk.booking_tour.exception.UnauthorizedException;
 import sun.asterisk.booking_tour.repository.BookingRepository;
@@ -79,8 +80,12 @@ public class ReviewService {
     public ReviewResponse updateReview(Long reviewId, UpdateReviewRequest request) {
         Long userId = getCurrentUserId();
         
-        Review review = reviewRepository.findByIdAndUserId(reviewId, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Review not found or you don't have permission"));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+        
+        if (!review.getUser().getId().equals(userId)) {
+            throw new ForbiddenException("You don't have permission to update this review");
+        }
         
         // Only update fields that are provided
         if (request.getRating() != null) {
@@ -103,8 +108,12 @@ public class ReviewService {
     public void deleteReview(Long reviewId) {
         Long userId = getCurrentUserId();
         
-        Review review = reviewRepository.findByIdAndUserId(reviewId, userId)
-                .orElseThrow(() -> new ResourceNotFoundException("Review not found or you don't have permission"));
+        Review review = reviewRepository.findById(reviewId)
+                .orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+        
+        if (!review.getUser().getId().equals(userId)) {
+            throw new ForbiddenException("You don't have permission to delete this review");
+        }
         
         reviewRepository.delete(review);
         log.info("Deleted review with id: {} by user: {}", reviewId, userId);

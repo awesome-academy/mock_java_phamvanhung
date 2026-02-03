@@ -35,6 +35,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<ErrorResponse> handleForbiddenException(
+            ForbiddenException ex, WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
     @ExceptionHandler(FileUploadException.class)
     public ResponseEntity<ErrorResponse> handleFileUploadException(
             FileUploadException ex, WebRequest request) {

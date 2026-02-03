@@ -1,5 +1,9 @@
 package sun.asterisk.booking_tour.dto.review;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +34,15 @@ public class ReviewPageRequest {
     @Builder.Default
     @Schema(description = "Sort direction (ASC or DESC)", example = "DESC", defaultValue = "DESC")
     private String sortDirection = "DESC";
+
+    /**
+     * Converts this request to a Spring Data Pageable object
+     * @return Pageable with page, size, and sort configuration
+     */
+    public Pageable toPageable() {
+        Sort.Direction direction = "DESC".equalsIgnoreCase(this.sortDirection) 
+                ? Sort.Direction.DESC 
+                : Sort.Direction.ASC;
+        return PageRequest.of(this.page, this.size, Sort.by(direction, this.sortBy));
+    }
 }
