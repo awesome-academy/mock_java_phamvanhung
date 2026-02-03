@@ -43,6 +43,7 @@ public class CommentController {
 
     @Operation(summary = "Delete a comment", description = "Delete your own comment. Requires authentication.")
     @CommonApiResponses.Unauthorized
+    @CommonApiResponses.Forbidden
     @CommonApiResponses.NotFound
     @DeleteMapping("/{commentId}")
     public ResponseEntity<Void> deleteComment(
@@ -51,12 +52,4 @@ public class CommentController {
         return ResponseEntity.noContent().build();
     }
 
-    @Operation(summary = "Get comments by review", description = "Get all comments for a specific review")
-    @CommonApiResponses.NotFound
-    @GetMapping("/review/{reviewId}")
-    public ResponseEntity<List<CommentResponse>> getCommentsByReview(
-            @Parameter(description = "Review ID", required = true) @PathVariable Long reviewId) {
-        List<CommentResponse> response = commentService.getCommentsByReview(reviewId);
-        return ResponseEntity.ok(response);
-    }
 }

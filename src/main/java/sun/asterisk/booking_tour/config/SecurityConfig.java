@@ -32,6 +32,7 @@ public class SecurityConfig {
         "/api/v1/reviews/{reviewId}",
         "/api/v1/comments/review/**",
         "/api/v1/comments/tour/**",
+        "/api/v1/reviews/{reviewId}/comments/**",
         "/uploads/**",
         "/swagger-ui/**",
         "/swagger-ui.html",
