@@ -26,6 +26,5 @@ public class AdminUserRequest {
     @NotBlank(message = "Password is required")
     private String password;
 
-    @NotBlank(message = "Role ID is required")
-    private String roleId;
+    private Long roleId;
 }
