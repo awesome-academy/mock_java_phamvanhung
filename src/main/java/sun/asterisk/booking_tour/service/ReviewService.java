@@ -1,6 +1,9 @@
 package sun.asterisk.booking_tour.service;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
@@ -135,9 +138,7 @@ public class ReviewService {
         
         Page<Review> reviewPage = reviewRepository.findByUserId(userId, pageable);
         
-        List<ReviewResponse> reviews = reviewPage.getContent().stream()
-                .map(review -> mapToReviewResponse(review, userId))
-                .collect(Collectors.toList());
+        List<ReviewResponse> reviews = mapToReviewResponseList(reviewPage.getContent(), userId);
         
         return PageResponse.<ReviewResponse>builder()
                 .content(reviews)
@@ -160,9 +161,7 @@ public class ReviewService {
         Page<Review> reviewPage = reviewRepository.findByTourIdAndStatus(
                 tourId, ReviewStatus.APPROVED, pageable);
         
-        List<ReviewResponse> reviews = reviewPage.getContent().stream()
-                .map(review -> mapToReviewResponse(review, userId))
-                .collect(Collectors.toList());
+        List<ReviewResponse> reviews = mapToReviewResponseList(reviewPage.getContent(), userId);
         
         return PageResponse.<ReviewResponse>builder()
                 .content(reviews)
@@ -174,11 +173,60 @@ public class ReviewService {
                 .build();
     }
 
+    private List<ReviewResponse> mapToReviewResponseList(List<Review> reviews, Long currentUserId) {
+        if (reviews.isEmpty()) {
+            return Collections.emptyList();
+        }
+        
+        // Extract review IDs
+        List<Long> reviewIds = reviews.stream()
+                .map(Review::getId)
+                .collect(Collectors.toList());
+        
+        // Bulk fetch like counts
+        Map<Long, Long> likeCountMap = likeRepository.countLikesByReviewIds(reviewIds)
+                .stream()
+                .collect(Collectors.toMap(
+                    LikeRepository.ReviewLikeCount::getReviewId,
+                    LikeRepository.ReviewLikeCount::getLikeCount
+                ));
+        
+        // Bulk fetch comment counts
+        Map<Long, Long> commentCountMap = commentRepository.countCommentsByReviewIds(reviewIds)
+                .stream()
+                .collect(Collectors.toMap(
+                    CommentRepository.ReviewCommentCount::getReviewId,
+                    CommentRepository.ReviewCommentCount::getCommentCount
+                ));
+        
+        // Bulk fetch liked review IDs for current user
+        Set<Long> likedReviewIds = currentUserId != null
+                ? likeRepository.findLikedReviewIdsByUser(currentUserId, reviewIds)
+                    .stream()
+                    .collect(Collectors.toSet())
+                : Collections.emptySet();
+        
+        // Map reviews to responses
+        return reviews.stream()
+                .map(review -> mapToReviewResponse(
+                    review,
+                    likeCountMap.getOrDefault(review.getId(), 0L),
+                    commentCountMap.getOrDefault(review.getId(), 0L),
+                    likedReviewIds.contains(review.getId())
+                ))
+                .collect(Collectors.toList());
+    }
+    
     private ReviewResponse mapToReviewResponse(Review review, Long currentUserId) {
         Long likeCount = likeRepository.countByReviewId(review.getId());
         Long commentCount = commentRepository.countByReviewId(review.getId());
         Boolean isLiked = currentUserId != null && 
                 likeRepository.existsByUserIdAndReviewId(currentUserId, review.getId());
+        
+        return mapToReviewResponse(review, likeCount, commentCount, isLiked);
+    }
+    
+    private ReviewResponse mapToReviewResponse(Review review, Long likeCount, Long commentCount, Boolean isLiked) {
         
         String userFullName = "";
         if (review.getUser().getFirstName() != null && review.getUser().getLastName() != null) {
@@ -206,8 +254,8 @@ public class ReviewService {
                 .title(review.getTitle())
                 .content(review.getContent())
                 .status(review.getStatus())
-                .commentCount(commentCount.intValue())
-                .likeCount(likeCount.intValue())
+                .commentCount(commentCount != null ? commentCount.intValue() : 0)
+                .likeCount(likeCount != null ? likeCount.intValue() : 0)
                 .isLiked(isLiked)
                 .createdAt(review.getCreatedAt())
                 .updatedAt(review.getUpdatedAt())
