@@ -67,26 +67,30 @@ public class DataSeeder {
     }
 
     private User seedUsers(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
-        if (userRepository.findByEmail("admin@example.com").isEmpty()) {
-            Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
-            
-            User admin = new User();
-            admin.setFirstName("Admin");
-            admin.setLastName("System");
-            admin.setEmail("admin@example.com");
-            admin.setPassword(passwordEncoder.encode("admin123"));
-            admin.setPhone("+84123456789");
-            admin.setDateOfBirth(LocalDate.of(1990, 1, 1));
-            admin.setIsVerified(true);
-            admin.setStatus(UserStatus.ACTIVE);
-            admin.setRole(adminRole);
-            
-            userRepository.save(admin);
-            log.info("Created admin user: admin@example.com / admin123");
-            return admin;
+        // Check if admin already exists
+        var existingAdmin = userRepository.findByEmail("admin@gmail.com");
+        if (existingAdmin.isPresent()) {
+            log.info("Admin user already exists: admin@gmail.com");
+            return existingAdmin.get();
         }
         
-        return userRepository.findByEmail("admin@example.com").orElseThrow();
+        // Create new admin
+        Role adminRole = roleRepository.findByName("ADMIN").orElseThrow();
+        
+        User admin = new User();
+        admin.setFirstName("Admin");
+        admin.setLastName("System");
+        admin.setEmail("admin@gmail.com");
+        admin.setPassword(passwordEncoder.encode("Aa@123456"));
+        admin.setPhone("+84999888777");
+        admin.setDateOfBirth(LocalDate.of(1990, 1, 1));
+        admin.setIsVerified(true);
+        admin.setStatus(UserStatus.ACTIVE);
+        admin.setRole(adminRole);
+        
+        userRepository.save(admin);
+        log.info("Created admin user: admin@gmail.com / Aa@123456");
+        return admin;
     }
 
     private List<Category> seedCategories(CategoryRepository categoryRepository) {

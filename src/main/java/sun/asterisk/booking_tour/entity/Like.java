@@ -15,9 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "likes", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"user_id", "tour_id"})
-})
+@Table(name = "likes")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,6 +31,10 @@ public class Like extends BaseEntity {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "tour_id", nullable = false)
+    @JoinColumn(name = "tour_id")
     private Tour tour;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "review_id")
+    private Review review;
 }

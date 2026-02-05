@@ -26,7 +26,7 @@ import sun.asterisk.booking_tour.service.TourService;
 @RestController
 @RequestMapping("/api/v1/tours")
 @RequiredArgsConstructor
-@Tag(name = "Tour", description = "API endpoints for tour management")
+@Tag(name = "Tour", description = "API endpoints for Manage Tour")
 public class TourController {
 
     private final TourService tourService;
