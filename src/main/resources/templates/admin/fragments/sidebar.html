@@ -20,42 +20,42 @@
                     <a href="/admin/users" class="flex items-center p-3 rounded hover:bg-gray-700 transition"
                        th:classappend="${#strings.equals(activePage, 'users')} ? 'bg-gray-700' : ''">
                         <i class="fas fa-users mr-3"></i>
-                        Quản lý User
+                        Manage User
                     </a>
                 </li>
                 <li>
                     <a href="/admin/tours" class="flex items-center p-3 rounded hover:bg-gray-700 transition"
                        th:classappend="${#strings.equals(activePage, 'tours')} ? 'bg-gray-700' : ''">
                         <i class="fas fa-map-marked-alt mr-3"></i>
-                        Quản lý Tour
+                        Manage Tour
                     </a>
                 </li>
                 <li>
                     <a href="/admin/bookings" class="flex items-center p-3 rounded hover:bg-gray-700 transition"
                        th:classappend="${#strings.equals(activePage, 'bookings')} ? 'bg-gray-700' : ''">
                         <i class="fas fa-ticket-alt mr-3"></i>
-                        Quản lý Booking
+                        Manage Bookings
                     </a>
                 </li>
                 <li>
                     <a href="/admin/reviews" class="flex items-center p-3 rounded hover:bg-gray-700 transition"
                        th:classappend="${#strings.equals(activePage, 'reviews')} ? 'bg-gray-700' : ''">
                         <i class="fas fa-star mr-3"></i>
-                        Quản lý Review
+                        Manage Review
                     </a>
                 </li>
                 <li>
                     <a href="/admin/revenue" class="flex items-center p-3 rounded hover:bg-gray-700 transition"
                        th:classappend="${#strings.equals(activePage, 'revenue')} ? 'bg-gray-700' : ''">
                         <i class="fas fa-chart-line mr-3"></i>
-                        Doanh thu
+                        Manage Revenue
                     </a>
                 </li>
                 <li>
                     <a href="/admin/categories" class="flex items-center p-3 rounded hover:bg-gray-700 transition"
                        th:classappend="${#strings.equals(activePage, 'categories')} ? 'bg-gray-700' : ''">
                         <i class="fas fa-tags mr-3"></i>
-                        Quản lý Category
+                        Manage Category
                     </a>
                 </li>
             </ul>
@@ -68,7 +68,7 @@
                 <div class="ml-3">
                     <p class="text-sm font-medium">Admin</p>
                     <form action="/admin/logout" method="post" class="inline">
-                        <button type="submit" class="text-xs text-gray-400 hover:text-white bg-transparent border-0 p-0 cursor-pointer">Đăng xuất</button>
+                        <button type="submit" class="text-xs text-gray-400 hover:text-white bg-transparent border-0 p-0 cursor-pointer">logout</button>
                     </form>
                 </div>
             </div>

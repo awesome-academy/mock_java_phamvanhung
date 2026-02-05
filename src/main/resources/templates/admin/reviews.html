@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Review</title>
+    <title>Manage Review</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -17,7 +17,7 @@
             <!-- Header -->
             <header class="bg-white shadow-sm">
                 <div class="flex items-center justify-between p-4">
-                    <h1 class="text-2xl font-semibold text-gray-800">Quản lý Review</h1>
+                    <h1 class="text-2xl font-semibold text-gray-800">Manage Reviews</h1>
                 </div>
             </header>
 
@@ -26,11 +26,11 @@
                 <!-- Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="bg-white rounded-lg shadow p-4">
-                        <p class="text-gray-500 text-sm">Tổng Review</p>
+                        <p class="text-gray-500 text-sm">Total Reviews</p>
                         <p class="text-2xl font-bold text-gray-800">456</p>
                     </div>
                     <div class="bg-white rounded-lg shadow p-4">
-                        <p class="text-gray-500 text-sm">Đánh giá trung bình</p>
+                        <p class="text-gray-500 text-sm">Average Rating</p>
                         <div class="flex items-center">
                             <p class="text-2xl font-bold text-yellow-500 mr-2">4.5</p>
                             <div class="flex text-yellow-500">
@@ -43,7 +43,7 @@
                         </div>
                     </div>
                     <div class="bg-white rounded-lg shadow p-4">
-                        <p class="text-gray-500 text-sm">Chờ duyệt</p>
+                        <p class="text-gray-500 text-sm">Pending Approval</p>
                         <p class="text-2xl font-bold text-orange-600">12</p>
                     </div>
                 </div>
@@ -52,16 +52,16 @@
                 <div class="bg-white rounded-lg shadow p-4 mb-6">
                     <div class="flex items-center gap-4">
                         <div class="flex-1">
-                            <input type="text" placeholder="Tìm kiếm review..." 
+                            <input type="text" placeholder="Search reviews..." 
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option>Tất cả đánh giá</option>
-                            <option>5 sao</option>
-                            <option>4 sao</option>
-                            <option>3 sao</option>
-                            <option>2 sao</option>
-                            <option>1 sao</option>
+                            <option>All Ratings</option>
+                            <option>5 stars</option>
+                            <option>4 stars</option>
+                            <option>3 stars</option>
+                            <option>2 stars</option>
+                            <option>1 star</option>
                         </select>
                         <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg">
                             <i class="fas fa-search"></i>
@@ -99,10 +99,10 @@
                             <span class="text-gray-500">01/02/2026</span>
                             <div class="space-x-2">
                                 <button class="px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200">
-                                    <i class="fas fa-check mr-1"></i> Duyệt
+                                    <i class="fas fa-check mr-1"></i> Approval
                                 </button>
                                 <button class="px-3 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200">
-                                    <i class="fas fa-times mr-1"></i> Xóa
+                                    <i class="fas fa-times mr-1"></i> Delete
                                 </button>
                             </div>
                         </div>
@@ -136,10 +136,10 @@
                             <span class="text-gray-500">01/02/2026</span>
                             <div class="space-x-2">
                                 <button class="px-3 py-1 bg-green-100 text-green-800 rounded hover:bg-green-200">
-                                    <i class="fas fa-check mr-1"></i> Duyệt
+                                    <i class="fas fa-check mr-1"></i> Approval
                                 </button>
                                 <button class="px-3 py-1 bg-red-100 text-red-800 rounded hover:bg-red-200">
-                                    <i class="fas fa-times mr-1"></i> Xóa
+                                    <i class="fas fa-times mr-1"></i> Delete
                                 </button>
                             </div>
                         </div>

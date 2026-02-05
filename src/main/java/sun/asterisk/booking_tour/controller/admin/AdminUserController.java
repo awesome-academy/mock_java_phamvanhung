@@ -188,12 +188,12 @@ public class AdminUserController {
             // Double check: prevent self-deletion at controller level
             AdminUserListResponse userToDelete = adminUserService.getUserById(id);
             if (userToDelete.getEmail().equals(currentUserEmail)) {
-                redirectAttributes.addFlashAttribute("error", "Bạn không thể xóa chính mình");
+                redirectAttributes.addFlashAttribute("error", "Not allowed to delete your own account");
                 return "redirect:/admin/users";
             }
             
             adminUserService.deleteUser(id, currentUserEmail);
-            redirectAttributes.addFlashAttribute("success", "Xóa user thành công");
+            redirectAttributes.addFlashAttribute("success", "User deleted successfully");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

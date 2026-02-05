@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý User</title>
+    <title>User Management</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -17,7 +17,7 @@
             <!-- Header -->
             <header class="bg-white shadow-sm">
                 <div class="flex items-center justify-between p-4">
-                    <h1 class="text-2xl font-semibold text-gray-800">Quản lý User</h1>
+                    <h1 class="text-2xl font-semibold text-gray-800">User Management</h1>
                     <a href="/admin/users/add" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center">
                         <i class="fas fa-plus mr-2"></i>
                         Thêm User
@@ -98,7 +98,7 @@
                                         </button>
                                     </form>
                                     <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" class="inline" 
-                                          onsubmit="return confirm('Bạn có chắc muốn xóa user này?');">
+                                          onsubmit="return confirm('Bạn có chắc muốn Delete user này?');">
                                         <button type="submit" class="text-red-600 hover:text-red-900">
                                             <i class="fas fa-trash"></i>
                                         </button>

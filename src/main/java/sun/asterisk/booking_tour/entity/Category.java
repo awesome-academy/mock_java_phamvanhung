@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,6 +26,7 @@ import sun.asterisk.booking_tour.enums.CategoryStatus;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Category extends BaseEntity {
 
     @Id

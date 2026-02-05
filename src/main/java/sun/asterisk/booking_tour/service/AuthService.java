@@ -103,12 +103,12 @@ public class AuthService {
     }
 
     /**
-     * Login with Twitter authorization code
+     * Login with Twitter authorization code (with PKCE)
      */
     @Transactional
-    public AuthResponse loginWithTwitter(String code) {
+    public AuthResponse loginWithTwitter(String code, String codeVerifier) {
         try {
-            String accessToken = exchangeTwitterCodeForToken(code);
+            String accessToken = exchangeTwitterCodeForToken(code, codeVerifier);
             UserInfo userInfo = getTwitterUserInfo(accessToken);
 
             User user = findOrCreateUser(userInfo, AuthProvider.TWITTER.name());
@@ -263,26 +263,44 @@ public class AuthService {
     }
 
     /**
-     * Exchange Twitter authorization code for access token
+     * Exchange Twitter authorization code for access token (with PKCE)
      */
-    private String exchangeTwitterCodeForToken(String code) {
+    private String exchangeTwitterCodeForToken(String code, String codeVerifier) {
         WebClient webClient = webClientBuilder.build();
 
-        TwitterTokenResponse response = webClient.post()
-                .uri("https://api.twitter.com/2/oauth2/token")
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .bodyValue(String.format(
-                        "grant_type=authorization_code&code=%s&redirect_uri=%s&client_id=%s&client_secret=%s",
-                        code, twitterRedirectUri, twitterClientId, twitterClientSecret))
-                .retrieve()
-                .bodyToMono(TwitterTokenResponse.class)
-                .block();
+        // Twitter requires Basic Authentication: base64(client_id:client_secret)
+        String credentials = twitterClientId + ":" + twitterClientSecret;
+        String encodedCredentials = java.util.Base64.getEncoder().encodeToString(credentials.getBytes());
 
-        if (response == null || response.getAccessToken() == null) {
-            throw new ValidationException("Failed to exchange Twitter code for token");
+        // Build request body with proper URL encoding
+        String requestBody = String.format(
+                "grant_type=authorization_code&code=%s&redirect_uri=%s&client_id=%s&code_verifier=%s",
+                code, 
+                java.net.URLEncoder.encode(twitterRedirectUri, java.nio.charset.StandardCharsets.UTF_8),
+                twitterClientId, 
+                codeVerifier
+        );
+
+        try {
+            TwitterTokenResponse response = webClient.post()
+                    .uri("https://api.twitter.com/2/oauth2/token")
+                    .header("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
+                    .header("Authorization", "Basic " + encodedCredentials)
+                    .bodyValue(requestBody)
+                    .retrieve()
+                    .bodyToMono(TwitterTokenResponse.class)
+                    .block();
+
+            if (response == null || response.getAccessToken() == null) {
+                throw new ValidationException("Failed to exchange Twitter code for token");
+            }
+
+            return response.getAccessToken();
+            
+        } catch (org.springframework.web.reactive.function.client.WebClientResponseException e) {
+            logger.error("Twitter API error - Status: {}, Body: {}", e.getStatusCode(), e.getResponseBodyAsString());
+            throw new ValidationException("Twitter API error: " + e.getResponseBodyAsString());
         }
-
-        return response.getAccessToken();
     }
 
     /**

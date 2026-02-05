@@ -49,10 +49,4 @@ public class AdminController {
     public String manageRevenue(Model model) {
         return "admin/revenue";
     }
-
-    @GetMapping("/categories")
-    public String manageCategories(Model model) {
-        return "admin/categories";
-    }
 }
-

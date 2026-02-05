@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Doanh thu</title>
+    <title>Manage Revenue</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -17,10 +17,10 @@
             <!-- Header -->
             <header class="bg-white shadow-sm">
                 <div class="flex items-center justify-between p-4">
-                    <h1 class="text-2xl font-semibold text-gray-800">Doanh thu</h1>
+                    <h1 class="text-2xl font-semibold text-gray-800">Revenue</h1>
                     <div class="flex items-center space-x-2">
                         <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                            <i class="fas fa-download mr-2"></i> Xuất báo cáo
+                            <i class="fas fa-download mr-2"></i> Export Report
                         </button>
                     </div>
                 </div>
@@ -31,26 +31,26 @@
                 <!-- Revenue Stats -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow p-6 text-white">
-                        <p class="text-sm opacity-90">Doanh thu hôm nay</p>
+                        <p class="text-sm opacity-90">Revenue Today</p>
                         <p class="text-3xl font-bold mt-2">$2,345</p>
                         <p class="text-sm mt-2 opacity-75">
-                            <i class="fas fa-arrow-up mr-1"></i> +12% so với hôm qua
+                            <i class="fas fa-arrow-up mr-1"></i> +12% compared to yesterday
                         </p>
                     </div>
 
                     <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow p-6 text-white">
-                        <p class="text-sm opacity-90">Doanh thu tháng này</p>
+                        <p class="text-sm opacity-90">Revenue This Month</p>
                         <p class="text-3xl font-bold mt-2">$45,231</p>
                         <p class="text-sm mt-2 opacity-75">
-                            <i class="fas fa-arrow-up mr-1"></i> +8% so với tháng trước
+                            <i class="fas fa-arrow-up mr-1"></i> +8% compared to last month
                         </p>
                     </div>
 
                     <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow p-6 text-white">
-                        <p class="text-sm opacity-90">Doanh thu năm nay</p>
+                        <p class="text-sm opacity-90">Revenue This Year</p>
                         <p class="text-3xl font-bold mt-2">$523,456</p>
                         <p class="text-sm mt-2 opacity-75">
-                            <i class="fas fa-arrow-up mr-1"></i> +15% so với năm trước
+                            <i class="fas fa-arrow-up mr-1"></i> +15% compared to last year
                         </p>
                     </div>
                 </div>
@@ -58,16 +58,16 @@
                 <!-- Revenue by Tour -->
                 <div class="bg-white rounded-lg shadow mb-6">
                     <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-800">Doanh thu theo Tour</h2>
+                        <h2 class="text-lg font-semibold text-gray-800">Revenue by Tour</h2>
                     </div>
                     <div class="p-6">
                         <table class="min-w-full">
                             <thead>
                                 <tr class="border-b border-gray-200">
                                     <th class="text-left py-3 text-sm font-medium text-gray-500">Tour</th>
-                                    <th class="text-left py-3 text-sm font-medium text-gray-500">Số booking</th>
-                                    <th class="text-left py-3 text-sm font-medium text-gray-500">Doanh thu</th>
-                                    <th class="text-left py-3 text-sm font-medium text-gray-500">Tăng trưởng</th>
+                                    <th class="text-left py-3 text-sm font-medium text-gray-500">Number of Bookings</th>
+                                    <th class="text-left py-3 text-sm font-medium text-gray-500">Revenue</th>
+                                    <th class="text-left py-3 text-sm font-medium text-gray-500">Growth</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -111,11 +111,11 @@
                 <!-- Monthly Revenue Chart Placeholder -->
                 <div class="bg-white rounded-lg shadow">
                     <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-800">Biểu đồ doanh thu theo tháng</h2>
+                        <h2 class="text-lg font-semibold text-gray-800">Monthly Revenue Chart</h2>
                     </div>
                     <div class="p-6">
                         <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
-                            <p class="text-gray-500">Biểu đồ sẽ được hiển thị tại đây</p>
+                            <p class="text-gray-500">Chart will be displayed here</p>
                         </div>
                     </div>
                 </div>
