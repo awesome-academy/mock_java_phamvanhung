@@ -6,6 +6,7 @@
     <title>Manage Revenue</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body class="bg-gray-100">
     <div class="flex h-screen">
@@ -32,25 +33,28 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow p-6 text-white">
                         <p class="text-sm opacity-90">Revenue Today</p>
-                        <p class="text-3xl font-bold mt-2">$2,345</p>
-                        <p class="text-sm mt-2 opacity-75">
-                            <i class="fas fa-arrow-up mr-1"></i> +12% compared to yesterday
+                        <p class="text-3xl font-bold mt-2" th:text="|$${#numbers.formatDecimal(revenueToday, 1, 2)}|">$0</p>
+                        <p class="text-sm mt-2 opacity-75" th:classappend="${growthRateToday >= 0} ? '' : 'text-red-200'">
+                            <i th:class="${growthRateToday >= 0} ? 'fas fa-arrow-up mr-1' : 'fas fa-arrow-down mr-1'"></i>
+                            <span th:text="${#numbers.formatDecimal(growthRateToday, 1, 1)}">0</span>% compared to yesterday
                         </p>
                     </div>
 
                     <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow p-6 text-white">
                         <p class="text-sm opacity-90">Revenue This Month</p>
-                        <p class="text-3xl font-bold mt-2">$45,231</p>
-                        <p class="text-sm mt-2 opacity-75">
-                            <i class="fas fa-arrow-up mr-1"></i> +8% compared to last month
+                        <p class="text-3xl font-bold mt-2" th:text="|$${#numbers.formatDecimal(revenueThisMonth, 1, 2)}|">$0</p>
+                        <p class="text-sm mt-2 opacity-75" th:classappend="${growthRateThisMonth >= 0} ? '' : 'text-red-200'">
+                            <i th:class="${growthRateThisMonth >= 0} ? 'fas fa-arrow-up mr-1' : 'fas fa-arrow-down mr-1'"></i>
+                            <span th:text="${#numbers.formatDecimal(growthRateThisMonth, 1, 1)}">0</span>% compared to last month
                         </p>
                     </div>
 
                     <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow p-6 text-white">
                         <p class="text-sm opacity-90">Revenue This Year</p>
-                        <p class="text-3xl font-bold mt-2">$523,456</p>
-                        <p class="text-sm mt-2 opacity-75">
-                            <i class="fas fa-arrow-up mr-1"></i> +15% compared to last year
+                        <p class="text-3xl font-bold mt-2" th:text="|$${#numbers.formatDecimal(revenueThisYear, 1, 2)}|">$0</p>
+                        <p class="text-sm mt-2 opacity-75" th:classappend="${growthRateThisYear >= 0} ? '' : 'text-red-200'">
+                            <i th:class="${growthRateThisYear >= 0} ? 'fas fa-arrow-up mr-1' : 'fas fa-arrow-down mr-1'"></i>
+                            <span th:text="${#numbers.formatDecimal(growthRateThisYear, 1, 1)}">0</span>% compared to last year
                         </p>
                     </div>
                 </div>
@@ -58,7 +62,7 @@
                 <!-- Revenue by Tour -->
                 <div class="bg-white rounded-lg shadow mb-6">
                     <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-800">Revenue by Tour</h2>
+                        <h2 class="text-lg font-semibold text-gray-800">Revenue by Tour (This Month)</h2>
                     </div>
                     <div class="p-6">
                         <table class="min-w-full">
@@ -71,36 +75,16 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                <tr>
-                                    <td class="py-4 text-sm font-medium text-gray-800">Tour Hà Nội - Sapa</td>
-                                    <td class="py-4 text-sm text-gray-600">156</td>
-                                    <td class="py-4 text-sm font-medium text-gray-800">$85,800</td>
-                                    <td class="py-4 text-sm text-green-600">
-                                        <i class="fas fa-arrow-up mr-1"></i> 12%
-                                    </td>
+                                <tr th:if="${tourRevenue.isEmpty()}">
+                                    <td colspan="4" class="py-4 text-center text-gray-500">No revenue data available</td>
                                 </tr>
-                                <tr>
-                                    <td class="py-4 text-sm font-medium text-gray-800">Tour Đà Nẵng - Hội An</td>
-                                    <td class="py-4 text-sm text-gray-600">134</td>
-                                    <td class="py-4 text-sm font-medium text-gray-800">$83,080</td>
-                                    <td class="py-4 text-sm text-green-600">
-                                        <i class="fas fa-arrow-up mr-1"></i> 8%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 text-sm font-medium text-gray-800">Tour Phú Quốc</td>
-                                    <td class="py-4 text-sm text-gray-600">98</td>
-                                    <td class="py-4 text-sm font-medium text-gray-800">$87,220</td>
-                                    <td class="py-4 text-sm text-green-600">
-                                        <i class="fas fa-arrow-up mr-1"></i> 15%
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 text-sm font-medium text-gray-800">Tour Nha Trang</td>
-                                    <td class="py-4 text-sm text-gray-600">87</td>
-                                    <td class="py-4 text-sm font-medium text-gray-800">$56,430</td>
-                                    <td class="py-4 text-sm text-red-600">
-                                        <i class="fas fa-arrow-down mr-1"></i> 3%
+                                <tr th:each="tour : ${tourRevenue}">
+                                    <td class="py-4 text-sm font-medium text-gray-800" th:text="${tour.tourName}">Tour Name</td>
+                                    <td class="py-4 text-sm text-gray-600" th:text="${tour.bookingCount}">0</td>
+                                    <td class="py-4 text-sm font-medium text-gray-800" th:text="|$${#numbers.formatDecimal(tour.totalRevenue, 1, 2)}|">$0</td>
+                                    <td class="py-4 text-sm" th:classappend="${tour.growthRate >= 0} ? 'text-green-600' : 'text-red-600'">
+                                        <i th:class="${tour.growthRate >= 0} ? 'fas fa-arrow-up mr-1' : 'fas fa-arrow-down mr-1'"></i>
+                                        <span th:text="${#numbers.formatDecimal(tour.growthRate, 1, 1)}">0</span>%
                                     </td>
                                 </tr>
                             </tbody>
@@ -111,16 +95,124 @@
                 <!-- Monthly Revenue Chart Placeholder -->
                 <div class="bg-white rounded-lg shadow">
                     <div class="p-6 border-b border-gray-200">
-                        <h2 class="text-lg font-semibold text-gray-800">Monthly Revenue Chart</h2>
+                        <h2 class="text-lg font-semibold text-gray-800">Monthly Revenue Chart (Last 12 Months)</h2>
                     </div>
                     <div class="p-6">
-                        <div class="h-64 flex items-center justify-center bg-gray-50 rounded">
-                            <p class="text-gray-500">Chart will be displayed here</p>
-                        </div>
+                        <canvas id="revenueChart" class="w-full" style="max-height: 400px;"></canvas>
                     </div>
                 </div>
             </main>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const monthlyData = /*[[${monthlyRevenue}]]*/ [];
+        
+        // Prepare data for Chart.js
+        const labels = monthlyData.map(item => {
+            const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return monthNames[item.month - 1] + ' ' + item.year;
+        });
+        
+        const revenues = monthlyData.map(item => item.revenue);
+        const bookings = monthlyData.map(item => item.bookingCount);
+
+        // Create chart
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Revenue ($)',
+                    data: revenues,
+                    borderColor: 'rgb(59, 130, 246)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    tension: 0.4,
+                    yAxisID: 'y',
+                    fill: true
+                }, {
+                    label: 'Number of Bookings',
+                    data: bookings,
+                    borderColor: 'rgb(34, 197, 94)',
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    tension: 0.4,
+                    yAxisID: 'y1',
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                interaction: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                if (context.parsed.y !== null) {
+                                    if (context.datasetIndex === 0) {
+                                        label += new Intl.NumberFormat('en-US', {
+                                            style: 'currency',
+                                            currency: 'USD'
+                                        }).format(context.parsed.y);
+                                    } else {
+                                        label += context.parsed.y;
+                                    }
+                                }
+                                return label;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                        title: {
+                            display: true,
+                            text: 'Revenue ($)'
+                        },
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+                        title: {
+                            display: true,
+                            text: 'Bookings'
+                        },
+                        grid: {
+                            drawOnChartArea: false,
+                        },
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                }
+            }
+        });
+        /*]]>*/
+    </script>
 </body>
 </html>

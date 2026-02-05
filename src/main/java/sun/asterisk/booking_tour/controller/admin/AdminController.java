@@ -44,9 +44,4 @@ public class AdminController {
     public String manageReviews(Model model) {
         return "admin/reviews";
     }
-
-    @GetMapping("/revenue")
-    public String manageRevenue(Model model) {
-        return "admin/revenue";
-    }
 }
