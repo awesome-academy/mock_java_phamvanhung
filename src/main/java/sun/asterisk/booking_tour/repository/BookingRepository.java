@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.EntityGraph;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -74,4 +77,29 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
         @Param("status") BookingStatus status,
         @Param("startDate") LocalDateTime startDate
     );
+
+    // Admin booking queries
+    @Query("SELECT b FROM Booking b " +
+           "JOIN FETCH b.tourDeparture td " +
+           "JOIN FETCH td.tour t " +
+           "ORDER BY b.createdAt DESC")
+    List<Booking> findAllWithTourInfo();
+
+    @Query("SELECT b FROM Booking b " +
+           "JOIN FETCH b.tourDeparture td " +
+           "JOIN FETCH td.tour t " +
+           "WHERE b.status = :status " +
+           "ORDER BY b.createdAt DESC")
+    List<Booking> findByStatusWithTourInfo(@Param("status") BookingStatus status);
+
+    @EntityGraph(attributePaths = { "tourDeparture", "tourDeparture.tour" })
+    Page<Booking> findAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = { "tourDeparture", "tourDeparture.tour" })
+    Page<Booking> findByStatus(BookingStatus status, Pageable pageable);
+
+    @EntityGraph(attributePaths = { "tourDeparture", "tourDeparture.tour" })
+    Page<Booking> findByStatusNot(BookingStatus status, Pageable pageable);
+
+    Long countByStatus(BookingStatus status);
 }

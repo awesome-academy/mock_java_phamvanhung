@@ -29,19 +29,4 @@ public class AdminController {
     public String dashboard(Model model) {
         return "admin/dashboard";
     }
-
-    @GetMapping("/tours")
-    public String manageTours(Model model) {
-        return "admin/tours";
-    }
-
-    @GetMapping("/bookings")
-    public String manageBookings(Model model) {
-        return "admin/bookings";
-    }
-
-    @GetMapping("/reviews")
-    public String manageReviews(Model model) {
-        return "admin/reviews";
-    }
 }

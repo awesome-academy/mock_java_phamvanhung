@@ -27,39 +27,42 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-white rounded-lg shadow p-4">
                         <p class="text-gray-500 text-sm">Total Bookings</p>
-                        <p class="text-2xl font-bold text-gray-800">567</p>
+                        <p class="text-2xl font-bold text-gray-800" th:text="${totalBookings}">0</p>
                     </div>
                     <div class="bg-white rounded-lg shadow p-4">
                         <p class="text-gray-500 text-sm">Pending</p>
-                        <p class="text-2xl font-bold text-yellow-600">45</p>
+                        <p class="text-2xl font-bold text-yellow-600" th:text="${pendingBookings}">0</p>
                     </div>
                     <div class="bg-white rounded-lg shadow p-4">
                         <p class="text-gray-500 text-sm">Confirmed</p>
-                        <p class="text-2xl font-bold text-green-600">312</p>
+                        <p class="text-2xl font-bold text-green-600" th:text="${confirmedBookings}">0</p>
                     </div>
                     <div class="bg-white rounded-lg shadow p-4">
                         <p class="text-gray-500 text-sm">Cancelled</p>
-                        <p class="text-2xl font-bold text-red-600">210</p>
+                        <p class="text-2xl font-bold text-red-600" th:text="${cancelledBookings}">0</p>
                     </div>
                 </div>
 
                 <!-- Search and Filter -->
                 <div class="bg-white rounded-lg shadow p-4 mb-6">
-                    <div class="flex items-center gap-4">
+                    <form method="get" action="/admin/bookings" class="flex items-center gap-4">
                         <div class="flex-1">
-                            <input type="text" placeholder="Search bookings..." 
+                            <input type="text" name="search" placeholder="Search bookings..." 
                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
-                        <select class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option>All Statuses</option>
-                            <option>Pending</option>
-                            <option>Confirmed</option>
-                            <option>Cancelled</option>
+                        <select name="status" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="">All Statuses</option>
+                            <option th:each="s : ${statuses}"
+                                    th:value="${s}"
+                                    th:selected="${selectedStatus == s}"
+                                    th:text="${s}">
+                                STATUS
+                            </option>
                         </select>
-                        <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-lg">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
                             <i class="fas fa-search"></i>
                         </button>
-                    </div>
+                    </form>
                 </div>
 
                 <!-- Bookings Table -->
@@ -78,46 +81,56 @@
                             </tr>
                         </thead>
                         <tbody class="bg-white divide-y divide-gray-200">
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#BK001</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Nguyễn Văn A</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tour Hà Nội - Sapa</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01/02/2026</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">22,000,000đ</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Đã xác nhận
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-blue-600 hover:text-blue-900 mr-3">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-900">
-                                        <i class="fas fa-times"></i>
-                                    </button>
-                                </td>
+                            <tr th:if="${!hasBookings}">
+                                <td colspan="8" class="px-6 py-4 text-center text-gray-500">No bookings found</td>
                             </tr>
-                            <tr>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#BK002</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Trần Thị B</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Tour Đà Nẵng - Hội An</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">02/02/2026</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">12,400,000đ</td>
+                            <tr th:each="booking : ${bookings.content}">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${booking.code}">BK001</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${booking.customerName}">Customer</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${booking.tourName}">Tour Name</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" 
+                                    th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}">01/01/2026</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500" th:text="${booking.totalPeople}">0</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium" 
+                                    th:text="|$${#numbers.formatDecimal(booking.finalTotal, 1, 2)}|">$0</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                                        Chờ xử lý
+                                    <span th:switch="${booking.status}">
+                                        <span th:case="'PENDING'"
+                                              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                            PENDING
+                                        </span>
+                                        <span th:case="'CONFIRMED'"
+                                              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                            CONFIRMED
+                                        </span>
+                                        <span th:case="'PAID'"
+                                              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                            PAID
+                                        </span>
+                                        <span th:case="'COMPLETED'"
+                                              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-emerald-100 text-emerald-800">
+                                            COMPLETED
+                                        </span>
+                                        <span th:case="'CANCELLED'"
+                                              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                            CANCELLED
+                                        </span>
+                                        <span th:case="*"
+                                              class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800"
+                                              th:text="${booking.status}">
+                                            UNKNOWN
+                                        </span>
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                    <button class="text-blue-600 hover:text-blue-900 mr-3">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-900">
-                                        <i class="fas fa-times"></i>
-                                    </button>
+                                    <form th:action="@{/admin/bookings/{id}/cancel(id=${booking.id})}" method="post" style="display:inline;">
+                                        <input type="hidden" name="status" th:value="${selectedStatus}">
+                                        <input type="hidden" name="page" th:value="${bookings.number}">
+                                        <input type="hidden" name="size" th:value="${bookings.size}">
+                                        <button type="submit" class="text-red-600 hover:text-red-900">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         </tbody>
@@ -125,16 +138,32 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="mt-6 flex justify-center">
+                <div class="mt-6 flex items-center justify-between" th:if="${hasBookings}">
+                    <p class="text-sm text-gray-700">
+                        Hiển thị <span class="font-medium" th:text="${bookings.number * bookings.size + 1}"></span>
+                        đến <span class="font-medium" th:text="${bookings.number * bookings.size + bookings.numberOfElements}"></span>
+                        của <span class="font-medium" th:text="${bookings.totalElements}"></span> kết quả
+                    </p>
                     <div class="flex items-center space-x-2">
-                        <button class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                            Previous
-                        </button>
-                        <button class="px-3 py-2 border border-blue-600 bg-blue-600 text-white rounded-md text-sm font-medium">1</button>
-                        <button class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">2</button>
-                        <button class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
-                            Next
-                        </button>
+                        <a th:href="@{/admin/bookings(page=${bookings.number - 1}, size=${bookings.size}, status=${selectedStatus})}"
+                           th:classappend="${bookings.first} ? 'pointer-events-none opacity-50' : ''"
+                           class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            Trước
+                        </a>
+
+                        <span th:each="i : ${#numbers.sequence(0, bookings.totalPages - 1)}" th:if="${i < 5 || i == bookings.number || i == bookings.totalPages - 1}">
+                            <a th:href="@{/admin/bookings(page=${i}, size=${bookings.size}, status=${selectedStatus})}"
+                               th:classappend="${i == bookings.number} ? 'border-blue-600 bg-blue-600 text-white' : 'border-gray-300 text-gray-700 bg-white hover:bg-gray-50'"
+                               class="px-3 py-2 border rounded-md text-sm font-medium"
+                               th:text="${i + 1}">
+                            </a>
+                        </span>
+
+                        <a th:href="@{/admin/bookings(page=${bookings.number + 1}, size=${bookings.size}, status=${selectedStatus})}"
+                           th:classappend="${bookings.last} ? 'pointer-events-none opacity-50' : ''"
+                           class="px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                            Sau
+                        </a>
                     </div>
                 </div>
             </main>
