@@ -40,6 +40,27 @@ spring:
       password: ${REDIS_PASSWORD:}
       timeout: 3000ms
 
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:guest}
+    password: ${RABBITMQ_PASSWORD:guest}
+
+  jms:
+    pub-sub-domain: false
+
+jms:
+  queue:
+    email: ${JMS_QUEUE_EMAIL:email.booking.queue}
+
+rabbitmq:
+  exchange:
+    email: ${RABBITMQ_EXCHANGE_EMAIL:email.exchange}
+  queue:
+    email: ${RABBITMQ_QUEUE_EMAIL:email.queue}
+  routing-key:
+    email: ${RABBITMQ_ROUTING_KEY_EMAIL:email.booking}
+
 mail:
   queue:
     redis:
