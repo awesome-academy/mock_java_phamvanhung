@@ -85,8 +85,8 @@ public class AuthController {
     }
 
     @Operation(
-        summary = "Login with Twitter",
-        description = "Authenticate user using Twitter authorization code. The client must obtain the authorization code from Twitter OAuth 2.0 flow and send it to this endpoint. The server will exchange the code for an access token, verify it with Twitter, retrieve user information, create or update the user, and return JWT access and refresh tokens. Note: Twitter API v2 does not provide email by default, so we use username@twitter.oauth as email."
+        summary = "Login with Twitter (X)",
+        description = "Authenticate user using Twitter/X authorization code with PKCE flow. The client must: 1) Generate code_verifier and code_challenge, 2) Obtain authorization code from Twitter OAuth 2.0 with code_challenge, 3) Send both code and code_verifier to this endpoint. The server will exchange them for an access token, verify it with Twitter, retrieve user information, create or update the user, and return JWT tokens. Note: Twitter API v2 does not provide email by default, so we use username@twitter.oauth as email."
     )
     @CommonApiResponses.BadRequest
     @CommonApiResponses.InternalServerError
@@ -104,7 +104,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> loginWithTwitter(
             @Valid @RequestBody TwitterLoginRequest request) {
         
-        AuthResponse response = authService.loginWithTwitter(request.getCode());
+        AuthResponse response = authService.loginWithTwitter(request.getCode(), request.getCodeVerifier());
         return ResponseEntity.ok(response);
     }
 

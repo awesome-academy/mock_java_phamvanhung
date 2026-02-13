@@ -23,6 +23,7 @@ public class CustomUserDetails implements UserDetails {
     private String firstName;
     private String lastName;
     private String email;
+    private String password;
     private String phone;
     private LocalDate dateOfBirth;
     private String avatarUrl;
@@ -45,7 +46,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null; // OAuth users don't have passwords
+        return password;
     }
 
     @Override
